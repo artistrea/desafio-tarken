@@ -20,3 +20,16 @@ Considerando as instruções e requerimentos em inglês nos documentos `.docx`, 
 - [ ] gravar áudio (guardar localmente enquanto não sincronizado com db)
 - [ ] deletar áudio
 - [ ] escutar áudio
+
+## Front end
+
+Mínimo: Typescript, ReactJs, Material UI
+Extra: TanStack router
+
+## Backend
+
+Typescript, NestJs, Rest, TypeORM, Postgres
+
+## Mobile
+
+Typescript, React Native, React Native Paper, React Navigation
