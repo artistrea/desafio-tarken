@@ -3,18 +3,17 @@ import { Outlet, Link as RouterLink } from "@tanstack/react-router";
 
 export function LayoutWithNavbar() {
   return (
-    <Stack direction="row">
+    <Stack direction="row" width={"100%"} minHeight={"100vh"}>
       <Typography
         color="primary"
         fontSize={32}
         fontWeight={700}
         paddingLeft={6}
-        paddingRight={10}
         paddingY={2}
       >
         Moovy
       </Typography>
-      <Stack direction="column" paddingX={5}>
+      <Stack direction="column" paddingX={15} width={"100%"} flex={1}>
         <Stack direction="row">
           <Link
             component={RouterLink}

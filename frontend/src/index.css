@@ -3,7 +3,7 @@
   line-height: 1.5;
   font-weight: 400;
 
-  background-color: #dce0e2;
+  background-color: var(--clr-bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -11,12 +11,14 @@
   -moz-osx-font-smoothing: grayscale;
 
   --clr-primary: #f2911b;
+  --clr-bg: #dce0e2;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  height: 100%;
 }
 
 #root {
@@ -26,4 +28,8 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+* {
+  box-sizing: border-box;
 }

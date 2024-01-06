@@ -1,22 +1,17 @@
-import { PropsWithChildren, useState } from "react";
-import { Session, sessionContext } from "./use";
+import { type PropsWithChildren, useState } from "react";
+import { sessionContext } from "./use";
+import { login as apiLogin, type Session } from "../../api/login";
 
 export function SessionContextProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | undefined>(undefined);
 
-  function login(details: { email: string; password: string }) {
-    return new Promise<Session>((res) => {
-      setTimeout(() => {
-        setSession({
-          email: details.email,
-          authentication_token: details.password,
-        });
-        res({
-          email: details.email,
-          authentication_token: details.password,
-        });
-      }, 1000);
-    });
+  async function login(details: { email: string; password: string }) {
+    return apiLogin(details)
+      .then((sess) => {
+        setSession(sess);
+        return sess;
+      })
+      .catch(() => undefined);
   }
 
   return (
