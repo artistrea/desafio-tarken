@@ -1,4 +1,10 @@
-import { Button, Input, InputLabel } from "@mui/material";
+import {
+  Button,
+  Container,
+  Input,
+  FormControl,
+  FormLabel,
+} from "@mui/material";
 import { useState } from "react";
 import { useSessionContext } from "../contexts/sessionContext/use";
 import { useRouter } from "@tanstack/react-router";
@@ -15,7 +21,7 @@ export function LoginPage() {
 
   const router = useRouter();
   return (
-    <main
+    <Container
       style={{
         display: "flex",
         alignItems: "center",
@@ -54,32 +60,38 @@ export function LoginPage() {
           width: "max(320px, 30%)",
         }}
       >
-        <InputLabel>
-          <span style={{ display: "block" }}>Email</span>
+        <FormControl>
+          <FormLabel htmlFor="email" style={{ display: "block" }}>
+            Email
+          </FormLabel>
           <Input
+            id="email"
             disabled={loading}
             value={loginDetails.email}
             onChange={(e) =>
               setLoginDetails((ps) => ({ ...ps, email: e.target.value }))
             }
           />
-        </InputLabel>
-        <InputLabel>
-          <span style={{ display: "block" }}>Senha</span>
+        </FormControl>
+        <FormControl>
+          <FormLabel htmlFor="password" style={{ display: "block" }}>
+            Senha
+          </FormLabel>
           <Input
+            id="password"
             disabled={loading}
             value={loginDetails.password}
             onChange={(e) =>
               setLoginDetails((ps) => ({ ...ps, password: e.target.value }))
             }
           />
-        </InputLabel>
+        </FormControl>
         <br />
         <br />
         <Button disabled={loading} type="submit" variant="outlined">
           Entrar
         </Button>
       </form>
-    </main>
+    </Container>
   );
 }
