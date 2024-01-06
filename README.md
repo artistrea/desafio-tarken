@@ -2,10 +2,10 @@
 
 Considerando as instruções e requerimentos em inglês nos documentos `.docx`, separo as seguintes tarefas:
 
-- [ ] setup react frontend;
-  - [ ] rotas;
-  - [ ] definição de dependência do backend;
-  - [ ] componentes;
+- [x] setup react frontend;
+  - [x] rotas;
+  - [x] componentes e páginas;
+  - [x] definição de dependência do backend;
 - [ ] setup backend;
   - [ ] modelagem inicial do banco de dados;
   - [ ] rotas;
