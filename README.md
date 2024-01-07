@@ -28,6 +28,8 @@ Extra: TanStack router
 
 ## Backend
 
+https://dbdiagram.io/d/656743c13be1495787fa3651
+
 Typescript, NestJs, Rest, TypeORM, Postgres
 
 ## Mobile
