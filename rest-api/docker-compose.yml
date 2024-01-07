@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres_db
+    ports:
+      - '5433:5432'
+    environment:
+      POSTGRES_DB: movies_library_db
+      POSTGRES_USER: movies_library_user
+      POSTGRES_PASSWORD: movies_library_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
