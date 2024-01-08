@@ -6,6 +6,8 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/users.entity';
 import { ConfigModule } from '@nestjs/config';
+import { MoviesModule } from './movies/movies.module';
+import { Movie } from './movies/movies.entity';
 
 @Module({
   imports: [
@@ -17,11 +19,12 @@ import { ConfigModule } from '@nestjs/config';
       username: 'movies_library_user',
       password: 'movies_library_password',
       database: 'movies_library_db',
-      entities: [User],
+      entities: [User, Movie],
       synchronize: true,
     }),
     AuthModule,
     UsersModule,
+    MoviesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

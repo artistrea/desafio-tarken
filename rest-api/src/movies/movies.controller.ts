@@ -1,6 +1,7 @@
 import { Controller, UseGuards, Get, Body } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import type { Movie } from './movies.entity';
+import { MoviesService } from './movies.service';
 
 type SearchParams = {
   query: string;
@@ -9,6 +10,8 @@ type SearchParams = {
 
 @Controller('movies')
 export class MoviesController {
+  constructor(private moviesService: MoviesService) {}
+
   @UseGuards(AuthGuard)
   @Get('search')
   async search(@Body() searchParams: SearchParams): Promise<Movie[]> {
@@ -23,7 +26,7 @@ export class MoviesController {
       `http://www.omdbapi.com/?${search}`,
     )
       .then((res) => res.json())
-      .catch(() => null);
+      .catch((err) => console.log(err));
 
     if (response.Response !== 'True') {
       return [] as Movie[];
@@ -31,19 +34,31 @@ export class MoviesController {
 
     const movies: Movie[] = await Promise.all(
       response.Search.map(async ({ imdbID }) => {
-        const movie: MovieResult = await fetch(
-          `http://www.omdbapi.com/?${new URLSearchParams({
-            apikey: process.env.API_KEY,
-            i: imdbID,
-          })}`,
-        ).then((res) => res.json());
+        {
+          let movie = await this.moviesService.findOne(imdbID);
 
-        return {
-          id: movie.imdbID,
-          title: movie.Title,
-          rating: movie.imdbRating,
-          poster: movie.Poster,
-        };
+          const movieInDatabase = movie != null;
+
+          if (movieInDatabase) return movie;
+
+          movie = await fetch(
+            `http://www.omdbapi.com/?${new URLSearchParams({
+              apikey: process.env.API_KEY,
+              i: imdbID,
+            })}`,
+          )
+            .then((res) => res.json())
+            .then((m: MovieResult) => ({
+              id: m.imdbID,
+              title: m.Title,
+              rating: m.imdbRating,
+              poster: m.Poster,
+            }));
+
+          this.moviesService.createMovie(movie);
+
+          return movie;
+        }
       }),
     );
 
