@@ -53,6 +53,7 @@ export class MoviesController {
               title: m.Title,
               rating: m.imdbRating,
               poster: m.Poster,
+              libraryMovies: undefined,
             }));
 
           this.moviesService.createMovie(movie);

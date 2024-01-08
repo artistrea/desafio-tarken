@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { LibraryMovie } from 'src/library_movies/entities/library_movie.entity';
+import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class Movie {
@@ -13,4 +14,9 @@ export class Movie {
 
   @Column()
   rating: string;
+
+  @OneToMany(() => LibraryMovie, (libraryMovie) => libraryMovie.movie, {
+    onDelete: 'CASCADE',
+  })
+  libraryMovies: LibraryMovie[];
 }

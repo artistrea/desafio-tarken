@@ -21,7 +21,15 @@ export class MoviesService {
     return this.moviesRepository.save(newMovie);
   }
 
-  async findOne(id: string): Promise<Movie | null> {
-    return this.moviesRepository.findOneBy({ id });
+  async findOne(id: string) {
+    return this.moviesRepository.findOne({
+      where: { id },
+      select: {
+        id: true,
+        poster: true,
+        rating: true,
+        title: true,
+      },
+    });
   }
 }

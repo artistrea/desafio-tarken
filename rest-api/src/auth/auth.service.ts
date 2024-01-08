@@ -6,6 +6,7 @@ import {
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { JWTPayload } from 'src/types/AuthenticatedRequest';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +23,7 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const payload = { sub: user.id, email: user.email };
+    const payload: JWTPayload = { id: user.id, email: user.email };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

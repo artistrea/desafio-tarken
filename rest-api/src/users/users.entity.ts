@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { LibraryMovie } from 'src/library_movies/entities/library_movie.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity()
 export class User {
@@ -10,4 +11,7 @@ export class User {
 
   @Column()
   hashed_password: string;
+
+  @OneToMany(() => LibraryMovie, (libraryMovie) => libraryMovie.user)
+  libraryMovies: LibraryMovie[];
 }
