@@ -5,6 +5,7 @@ import { MovieCard } from "../components/MovieCard";
 import { useSearchQuery } from "../clientApi/movies/useSearchQuery";
 import { useRemoveFromLibraryMutation } from "../clientApi/libraryMovies/useRemoveFromLibraryMutation";
 import { useAddToLibraryMutation } from "../clientApi/libraryMovies/useAddToLibraryMutation";
+import { useLibraryQuery } from "../clientApi/libraryMovies/useLibraryQuery";
 
 export function SearchPage() {
   const [query, setQuery] = useState("");
@@ -20,8 +21,9 @@ export function SearchPage() {
 
   const { mutateAsync: removeFromLib } = useRemoveFromLibraryMutation();
   const { mutateAsync: addToLib } = useAddToLibraryMutation();
+  const { data: library } = useLibraryQuery();
 
-  const [idsAdded, setIdsAdded] = useState<string[]>([]);
+  const idsAdded = library?.map((m) => m.id) || [];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -101,14 +103,10 @@ export function SearchPage() {
                   <MovieCard
                     onAddToLibrary={() => {
                       // usando update pessimista só por simplicidade pra evitar bugs
-                      addToLib(m.id).then(({ data: { movieId } }) => {
-                        setIdsAdded((ids) => [...ids, movieId]);
-                      });
+                      addToLib(m.id);
                     }}
                     onRemoveFromLibrary={() => {
-                      removeFromLib(m.id).then(() => {
-                        setIdsAdded((ids) => ids.filter((id) => id !== m.id));
-                      });
+                      removeFromLib(m.id);
                     }}
                     movie={{
                       ...m,
