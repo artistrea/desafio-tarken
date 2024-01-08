@@ -3,7 +3,8 @@ import { router } from "./router";
 import { SessionContextProvider } from "./contexts/sessionContext/Provider";
 import { useSessionContext } from "./contexts/sessionContext/use";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./clientApi/instance";
 
 const theme = createTheme({
   palette: {
@@ -15,8 +16,6 @@ const theme = createTheme({
     },
   },
 });
-const queryClient = new QueryClient();
-
 function App() {
   return (
     <QueryClientProvider client={queryClient}>

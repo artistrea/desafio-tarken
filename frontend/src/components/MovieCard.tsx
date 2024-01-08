@@ -14,7 +14,7 @@ import { Movie } from "../clientApi/movies/Movie";
 type MovieCardProps = {
   movie: Movie;
   onRemoveFromLibrary: (m: Movie) => void;
-  onAddToLibrary: (m: Movie) => void;
+  onAddToLibrary?: (m: Movie) => void;
 };
 
 export function MovieCard({
@@ -71,7 +71,7 @@ export function MovieCard({
         <Button
           onClick={() => {
             if (movie.hasAlreadyBeenAdded) onRemoveFromLibrary(movie);
-            else onAddToLibrary(movie);
+            else onAddToLibrary && onAddToLibrary(movie);
           }}
           fullWidth
           color={movie.hasAlreadyBeenAdded ? "error" : "success"}

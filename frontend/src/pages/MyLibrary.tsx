@@ -1,14 +1,14 @@
-// import { Alert, Grid, Stack, Typography } from "@mui/material";
-// import SearchIcon from "@mui/icons-material/Search";
-// import { useMoviesLibrary } from "../api/useMoviesLibrary";
-// import { MovieCard } from "../components/MovieCard";
-// import { useState } from "react";
-// import { Movie } from "../api/useMoviesQuery";
+import { Alert, Grid, Stack, Typography } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import { MovieCard } from "../components/MovieCard";
+import { useState } from "react";
+import { useLibrary } from "../clientApi/libraryMovies/useLibrary";
+import { useRemoveFromLibraryMutation } from "../clientApi/libraryMovies/useRemoveFromLibraryMutation";
 
 export function MyLibraryPage() {
-  return "";
-  const { movies, setMovies } = useMoviesLibrary();
-  const [lastDeleted, setLastDeleted] = useState<Movie | undefined>(undefined);
+  const { data: movies } = useLibrary();
+  const [lastDeleted, setLastDeleted] = useState<string | undefined>(undefined);
+  const { mutateAsync: removeFromLib } = useRemoveFromLibraryMutation();
 
   return (
     <div
@@ -25,7 +25,7 @@ export function MyLibraryPage() {
             onClose={() => setLastDeleted(undefined)}
             sx={{ marginLeft: "auto" }}
           >
-            {lastDeleted.title} deleted from your watchlist
+            {lastDeleted} deleted from your watchlist
           </Alert>
         )}
       </Stack>
@@ -40,18 +40,9 @@ export function MyLibraryPage() {
             {movies.map((m) => (
               <Grid item key={m.id}>
                 <MovieCard
-                  onAddToLibrary={() =>
-                    setMovies((ms) =>
-                      ms.map((mv) =>
-                        mv.id === m.id
-                          ? { ...mv, hasAlreadyBeenAdded: true }
-                          : mv
-                      )
-                    )
-                  }
                   onRemoveFromLibrary={() => {
-                    setLastDeleted(m);
-                    setMovies((ms) => ms.filter((mv) => mv.id !== m.id));
+                    setLastDeleted(m.title);
+                    removeFromLib(m.id);
                   }}
                   movie={m}
                 />
