@@ -9,8 +9,8 @@ import {
   Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SignUpDto } from './dto/SignUpDto';
-import { SignInDto } from './dto/SignInDto';
+import { SignUpDto } from './dto/SignUp.dto';
+import { SignInDto } from './dto/SignIn.dto';
 import { ValidationPipe } from '@nestjs/common/pipes';
 import { AuthGuard } from './auth.guard';
 import { AuthenticatedRequest } from 'src/types/AuthenticatedRequest';
