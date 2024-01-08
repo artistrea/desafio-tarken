@@ -17,9 +17,8 @@ export class AuthService {
 
   async signIn(email: string, pass: string): Promise<{ access_token: string }> {
     const user = await this.usersService.findOne(email);
-    console.log('user', user);
 
-    if (!(await bcrypt.compare(pass, user.hashed_password))) {
+    if (!user || !(await bcrypt.compare(pass, user.hashed_password))) {
       throw new UnauthorizedException();
     }
 
@@ -36,7 +35,6 @@ export class AuthService {
   ): Promise<ReturnType<typeof this.signIn>> {
     if (passConfirmation !== pass) throw new BadRequestException();
     const hashed_password = await bcrypt.hash(pass, 10);
-    console.log('hashed_password', hashed_password);
 
     await this.usersService.createUser(email, hashed_password);
 
