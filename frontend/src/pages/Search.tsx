@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { MovieCard } from "../components/MovieCard";
 import { useSearchQuery } from "../clientApi/movies/useSearchQuery";
+import { useRemoveFromLibraryMutation } from "../clientApi/libraryMovies/useRemoveFromLibraryMutation";
+import { useAddToLibraryMutation } from "../clientApi/libraryMovies/useAddToLibraryMutation";
 
 export function SearchPage() {
   const [query, setQuery] = useState("");
@@ -15,6 +17,9 @@ export function SearchPage() {
   } = useSearchQuery(searchingFor);
 
   const ref = useRef<HTMLDivElement>(null);
+
+  const { mutateAsync: removeFromLib } = useRemoveFromLibraryMutation();
+  const { mutateAsync: addToLib } = useAddToLibraryMutation();
 
   const [idsAdded, setIdsAdded] = useState<string[]>([]);
 
@@ -94,10 +99,17 @@ export function SearchPage() {
               movies.map((m) => (
                 <Grid item key={m.id}>
                   <MovieCard
-                    onAddToLibrary={() => setIdsAdded((ids) => [...ids, m.id])}
-                    onRemoveFromLibrary={() =>
-                      setIdsAdded((ids) => ids.filter((id) => id !== m.id))
-                    }
+                    onAddToLibrary={() => {
+                      // usando update pessimista só por simplicidade pra evitar bugs
+                      addToLib(m.id).then(({ data: { movieId } }) => {
+                        setIdsAdded((ids) => [...ids, movieId]);
+                      });
+                    }}
+                    onRemoveFromLibrary={() => {
+                      removeFromLib(m.id).then(() => {
+                        setIdsAdded((ids) => ids.filter((id) => id !== m.id));
+                      });
+                    }}
                     movie={{
                       ...m,
                       hasAlreadyBeenAdded: idsAdded.includes(m.id),
