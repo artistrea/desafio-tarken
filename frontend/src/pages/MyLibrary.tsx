@@ -2,11 +2,11 @@ import { Alert, Grid, Stack, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { MovieCard } from "../components/MovieCard";
 import { useState } from "react";
-import { useLibrary } from "../clientApi/libraryMovies/useLibrary";
+import { useLibraryQuery } from "../clientApi/libraryMovies/useLibraryQuery";
 import { useRemoveFromLibraryMutation } from "../clientApi/libraryMovies/useRemoveFromLibraryMutation";
 
 export function MyLibraryPage() {
-  const { data: movies } = useLibrary();
+  const { data: movies } = useLibraryQuery();
   const [lastDeleted, setLastDeleted] = useState<string | undefined>(undefined);
   const { mutateAsync: removeFromLib } = useRemoveFromLibraryMutation();
 

@@ -1,14 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { api } from "../instance";
+import { Session } from "./Session";
 
 type RegisterInfo = {
   email: string;
   password: string;
   password_confirmation: string;
-};
-
-export type Session = {
-  access_token: string;
 };
 
 export function useRegisterMutation() {

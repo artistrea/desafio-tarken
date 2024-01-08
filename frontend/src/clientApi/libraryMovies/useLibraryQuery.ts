@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "../instance";
 import { Movie } from "../movies/Movie";
 
-export function useLibrary() {
+export function useLibraryQuery() {
   return useQuery({
     queryKey: ["library-movies"],
     queryFn: async () => {
