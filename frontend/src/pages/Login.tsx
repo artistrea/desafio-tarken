@@ -30,10 +30,11 @@ export function LoginPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.navigate({
-      to: "/library",
-      replace: true,
-    });
+    if (session)
+      router.navigate({
+        to: "/library",
+        replace: true,
+      });
   }, [session, router]);
 
   return (

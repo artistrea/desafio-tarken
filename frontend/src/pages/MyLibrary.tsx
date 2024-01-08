@@ -6,7 +6,7 @@ import { useLibraryQuery } from "../clientApi/libraryMovies/useLibraryQuery";
 import { useRemoveFromLibraryMutation } from "../clientApi/libraryMovies/useRemoveFromLibraryMutation";
 
 export function MyLibraryPage() {
-  const { data: movies } = useLibraryQuery();
+  const { data: movies, isLoading } = useLibraryQuery();
   const [lastDeleted, setLastDeleted] = useState<string | undefined>(undefined);
   const { mutateAsync: removeFromLib } = useRemoveFromLibraryMutation();
 
@@ -50,29 +50,31 @@ export function MyLibraryPage() {
             ))}
           </Grid>
         ) : (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "100%",
-            }}
-          >
-            <SearchIcon
-              color="action"
-              sx={{
-                width: 300,
-                height: 300,
-                stroke: "var(--clr-bg)",
-                strokeWidth: 1.5,
+          !isLoading && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
               }}
-            />
-            <Typography color="GrayText">
-              It looks like there are no movies in your library! Search for a
-              movie you have watched and add it here!
-            </Typography>
-          </div>
+            >
+              <SearchIcon
+                color="action"
+                sx={{
+                  width: 300,
+                  height: 300,
+                  stroke: "var(--clr-bg)",
+                  strokeWidth: 1.5,
+                }}
+              />
+              <Typography color="GrayText">
+                It looks like there are no movies in your library! Search for a
+                movie you have watched and add it here!
+              </Typography>
+            </div>
+          )
         )}
       </main>
     </div>
