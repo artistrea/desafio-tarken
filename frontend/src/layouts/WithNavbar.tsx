@@ -1,7 +1,12 @@
-import { Link, Stack, Typography } from "@mui/material";
-import { Outlet, Link as RouterLink } from "@tanstack/react-router";
+import { Logout } from "@mui/icons-material";
+import { Button, Link, Stack, Typography } from "@mui/material";
+import { Outlet, Link as RouterLink, useRouter } from "@tanstack/react-router";
+import { useSessionContext } from "../contexts/sessionContext/use";
 
 export function LayoutWithNavbar() {
+  const { logout } = useSessionContext();
+  const router = useRouter();
+
   return (
     <Stack direction="row" width={"100%"} minHeight={"100vh"}>
       <Typography
@@ -43,6 +48,19 @@ export function LayoutWithNavbar() {
           >
             My Library
           </Link>
+          <Button
+            endIcon={<Logout />}
+            sx={{ marginLeft: "auto" }}
+            color="secondary"
+            onClick={() => {
+              logout();
+              router.navigate({
+                to: "/",
+              });
+            }}
+          >
+            Sair
+          </Button>
         </Stack>
         <Outlet />
       </Stack>

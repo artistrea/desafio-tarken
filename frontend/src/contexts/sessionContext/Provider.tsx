@@ -6,11 +6,10 @@ import {
 } from "../../clientApi/auth/useLoginMutation";
 import { api } from "../../clientApi/instance";
 import Cookie from "js-cookie";
+import { useRegisterMutation } from "../../clientApi/auth/useRegisterMutation";
 
 export function SessionContextProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | undefined>(undefined);
-
-  const { mutateAsync } = useLoginMutation();
 
   useEffect(() => {
     const access_token = Cookie.get("access_token");
@@ -32,9 +31,25 @@ export function SessionContextProvider({ children }: PropsWithChildren) {
       Cookie.remove("access_token");
     }
   }, [session]);
+  const { mutateAsync: loginAsync } = useLoginMutation();
 
   async function login(details: { email: string; password: string }) {
-    return mutateAsync(details)
+    return loginAsync(details)
+      .then((res) => res.data)
+      .then((sess) => {
+        setSession(sess);
+
+        return sess;
+      });
+  }
+
+  const { mutateAsync: apiRegister } = useRegisterMutation();
+  async function register(details: {
+    email: string;
+    password: string;
+    password_confirmation: string;
+  }) {
+    return apiRegister(details)
       .then((res) => res.data)
       .then((sess) => {
         setSession(sess);
@@ -48,7 +63,7 @@ export function SessionContextProvider({ children }: PropsWithChildren) {
   }
 
   return (
-    <sessionContext.Provider value={{ session, login, logout }}>
+    <sessionContext.Provider value={{ session, login, logout, register }}>
       {children}
     </sessionContext.Provider>
   );

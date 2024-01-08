@@ -7,6 +7,11 @@ export type SessionContext = null | {
     email: string;
     password: string;
   }) => Promise<Session | undefined>;
+  register: (details: {
+    email: string;
+    password: string;
+    password_confirmation: string;
+  }) => Promise<Session | undefined>;
   logout: () => void;
 };
 
