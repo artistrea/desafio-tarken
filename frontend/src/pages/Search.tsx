@@ -21,7 +21,18 @@ export function SearchPage() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (searchingFor && entry.isIntersecting && !isFetching) {
+        const isSearching = !!searchingFor;
+        const isAlmostToTheEnd = entry.isIntersecting;
+        const lastPageHasMovies =
+          moviePages?.pages &&
+          moviePages.pages[moviePages.pages.length - 1].movies.length > 0;
+
+        if (
+          !isFetching &&
+          isSearching &&
+          isAlmostToTheEnd &&
+          lastPageHasMovies
+        ) {
           fetchNextPage();
         }
       },
@@ -30,7 +41,7 @@ export function SearchPage() {
 
     ref.current && observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [searchingFor, fetchNextPage, isFetching]);
+  }, [searchingFor, fetchNextPage, isFetching, moviePages?.pages]);
 
   return (
     <div
@@ -97,8 +108,6 @@ export function SearchPage() {
             )}
             <div style={{ display: "hidden" }} ref={ref}></div>
           </Grid>
-        ) : isLoading ? (
-          "Loading..."
         ) : (
           <div
             style={{
@@ -109,18 +118,24 @@ export function SearchPage() {
               height: "100%",
             }}
           >
-            <SearchIcon
-              color="action"
-              sx={{
-                width: 300,
-                height: 300,
-                stroke: "var(--clr-bg)",
-                strokeWidth: 1.5,
-              }}
-            />
-            <Typography color="GrayText">
-              We couldn't find the movies you were looking for :(
-            </Typography>
+            {isLoading ? (
+              <div className="spinner" style={{ color: "black" }} />
+            ) : (
+              <>
+                <SearchIcon
+                  color="action"
+                  sx={{
+                    width: 300,
+                    height: 300,
+                    stroke: "var(--clr-bg)",
+                    strokeWidth: 1.5,
+                  }}
+                />
+                <Typography color="GrayText">
+                  We couldn't find the movies you were looking for :(
+                </Typography>
+              </>
+            )}
           </div>
         )}
       </main>

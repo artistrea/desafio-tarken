@@ -4,11 +4,12 @@ import {
   CardActions,
   CardContent,
   CardMedia,
+  Skeleton,
   Stack,
   Typography,
 } from "@mui/material";
 import { Bookmark, Star } from "@mui/icons-material";
-import { Movie } from "../api/useMoviesQuery";
+import { Movie } from "../clientApi/movies/Movie";
 
 type MovieCardProps = {
   movie: Movie;
@@ -23,12 +24,26 @@ export function MovieCard({
 }: MovieCardProps) {
   return (
     <Card sx={{ width: 300 }}>
-      <CardMedia
-        component="img"
-        height="444"
-        sx={{ padding: 1, maxWidth: "100%", borderRadius: 3 }}
-        image={movie.poster}
-      />
+      {movie.poster !== "N/A" ? (
+        <CardMedia
+          component={"img"}
+          height="444"
+          sx={{ padding: 1, maxWidth: "100%", borderRadius: 3 }}
+          image={movie.poster}
+        />
+      ) : (
+        <CardMedia
+          component={Skeleton}
+          variant="rectangular"
+          height={444}
+          sx={{
+            margin: 1,
+            maxWidth: "100%",
+            borderRadius: 1,
+          }}
+          animation={false}
+        />
+      )}
       <CardContent sx={{ paddingY: 1, paddingX: 3 }}>
         <Stack direction="row" display="flex" alignItems="center">
           <Typography
