@@ -6,14 +6,19 @@ Considerando as instruções e requerimentos em inglês nos documentos `.docx`, 
   - [x] rotas;
   - [x] componentes e páginas;
   - [x] definição de dependência do backend;
-- [ ] setup backend;
-  - [ ] modelagem inicial do banco de dados;
-  - [ ] rotas;
+- [x] setup backend;
+  - [x] modelagem inicial do banco de dados;
+  - [x] rotas;
   - [ ] seed;
-- [ ] login sem senha (para uso em outros módulos);
-- [ ] pesquisa no tmdb;
-- [ ] adição de um filme à biblioteca do usuário (adiciona ao bd "local" o filme);
-- [ ] remoção de um filme da bilioteca de usuário;
+- [x] back: login e registro;
+- [ ] front: login e registro;
+- [x] back: pesquisa no tmdb (adiciona ao bd "local" caso não tenha localmente);
+- [ ] front: pesquisa no tmdb (adiciona ao bd "local" caso não tenha localmente);
+- [x] back: adição de um filme à biblioteca do usuário;
+- [ ] front: adição de um filme à biblioteca do usuário;
+- [x] back: remoção de um filme da bilioteca de usuário;
+- [ ] front: remoção de um filme da bilioteca de usuário;
+
 - [ ] escutar o áudio gravado para um filme;
 
 - [ ] setup react native mobile
