@@ -1,13 +1,5 @@
 import { useState } from "react";
 
-export type Movie = {
-  id: string;
-  title: string;
-  poster: string;
-  rating: string;
-  hasAlreadyBeenAdded?: boolean;
-};
-
 const moviesMock = [
   {
     title: "The Rock",

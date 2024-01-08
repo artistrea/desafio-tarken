@@ -15,7 +15,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signIn(email: string, pass: string): Promise<any> {
+  async signIn(email: string, pass: string): Promise<{ access_token: string }> {
     const user = await this.usersService.findOne(email);
     console.log('user', user);
 
@@ -33,7 +33,7 @@ export class AuthService {
     email: string,
     pass: string,
     passConfirmation: string,
-  ): Promise<any> {
+  ): Promise<ReturnType<typeof this.signIn>> {
     if (passConfirmation !== pass) throw new BadRequestException();
     const hashed_password = await bcrypt.hash(pass, 10);
     console.log('hashed_password', hashed_password);

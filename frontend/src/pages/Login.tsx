@@ -5,7 +5,7 @@ import {
   FormControl,
   FormLabel,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSessionContext } from "../contexts/sessionContext/use";
 import { useRouter } from "@tanstack/react-router";
 
@@ -17,9 +17,17 @@ export function LoginPage() {
 
   const [loading, setLoading] = useState(false);
 
-  const { login } = useSessionContext();
+  const { login, session } = useSessionContext();
 
   const router = useRouter();
+
+  useEffect(() => {
+    router.navigate({
+      to: "/library",
+      replace: true,
+    });
+  }, [session, router]);
+
   return (
     <Container
       style={{
@@ -41,11 +49,11 @@ export function LoginPage() {
                   to: "/library",
                   replace: true,
                 });
-              }, 0);
+              }, 100);
             })
             .catch(() => {
-              setLoading(false);
               alert("Email ou senha incorretas");
+              setLoading(false);
             });
           setLoading(true);
         }}
@@ -79,6 +87,7 @@ export function LoginPage() {
           </FormLabel>
           <Input
             id="password"
+            type="password"
             disabled={loading}
             value={loginDetails.password}
             onChange={(e) =>

@@ -1,12 +1,36 @@
 import { Button, Grid, Input, Stack, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import { useMoviesQuery } from "../api/useMoviesQuery";
 import { MovieCard } from "../components/MovieCard";
+import { useSearchQuery } from "../clientApi/movies/useSearchQuery";
 
 export function SearchPage() {
   const [query, setQuery] = useState("");
-  const { movies, setMovies, sendQuery } = useMoviesQuery();
+  const [searchingFor, setSearchingFor] = useState("");
+  const {
+    data: moviePages,
+    fetchNextPage,
+    isFetching,
+    isLoading,
+  } = useSearchQuery(searchingFor);
+
+  const ref = useRef<HTMLDivElement>(null);
+
+  const [idsAdded, setIdsAdded] = useState<string[]>([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (searchingFor && entry.isIntersecting && !isFetching) {
+          fetchNextPage();
+        }
+      },
+      { rootMargin: "1000px" }
+    );
+
+    ref.current && observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [searchingFor, fetchNextPage, isFetching]);
 
   return (
     <div
@@ -21,7 +45,7 @@ export function SearchPage() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            sendQuery(query);
+            setSearchingFor(query);
           }}
           style={{
             background: "#fff",
@@ -53,34 +77,28 @@ export function SearchPage() {
           height: "100%",
         }}
       >
-        {movies?.length ? (
+        {moviePages?.pages.flatMap((m) => m.movies).length ? (
           <Grid container spacing={2}>
-            {movies.map((m) => (
-              <Grid item key={m.id}>
-                <MovieCard
-                  onAddToLibrary={() =>
-                    setMovies((ms) =>
-                      ms.map((mv) =>
-                        mv.id === m.id
-                          ? { ...mv, hasAlreadyBeenAdded: true }
-                          : mv
-                      )
-                    )
-                  }
-                  onRemoveFromLibrary={() =>
-                    setMovies((ms) =>
-                      ms.map((mv) =>
-                        mv.id === m.id
-                          ? { ...mv, hasAlreadyBeenAdded: false }
-                          : mv
-                      )
-                    )
-                  }
-                  movie={m}
-                />
-              </Grid>
-            ))}
+            {moviePages?.pages.map(({ movies }) =>
+              movies.map((m) => (
+                <Grid item key={m.id}>
+                  <MovieCard
+                    onAddToLibrary={() => setIdsAdded((ids) => [...ids, m.id])}
+                    onRemoveFromLibrary={() =>
+                      setIdsAdded((ids) => ids.filter((id) => id !== m.id))
+                    }
+                    movie={{
+                      ...m,
+                      hasAlreadyBeenAdded: idsAdded.includes(m.id),
+                    }}
+                  />
+                </Grid>
+              ))
+            )}
+            <div style={{ display: "hidden" }} ref={ref}></div>
           </Grid>
+        ) : isLoading ? (
+          "Loading..."
         ) : (
           <div
             style={{

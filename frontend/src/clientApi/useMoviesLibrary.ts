@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Movie } from "./useMoviesQuery";
 
 const moviesMock = [
   {

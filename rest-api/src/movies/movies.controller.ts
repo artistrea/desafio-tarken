@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Body } from '@nestjs/common';
+import { Controller, UseGuards, Post, Body } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import type { Movie } from './movies.entity';
 import { MoviesService } from './movies.service';
@@ -13,8 +13,10 @@ export class MoviesController {
   constructor(private moviesService: MoviesService) {}
 
   @UseGuards(AuthGuard)
-  @Get('search')
-  async search(@Body() searchParams: SearchParams): Promise<Movie[]> {
+  @Post('search')
+  async search(
+    @Body() searchParams: SearchParams,
+  ): Promise<{ movies: Movie[]; page: number }> {
     const search = new URLSearchParams({
       type: 'movie',
       apikey: process.env.API_KEY,
@@ -29,7 +31,7 @@ export class MoviesController {
       .catch((err) => console.log(err));
 
     if (response.Response !== 'True') {
-      return [] as Movie[];
+      return { movies: [], page: searchParams.page };
     }
 
     const movies: Movie[] = await Promise.all(
@@ -63,7 +65,7 @@ export class MoviesController {
       }),
     );
 
-    return movies;
+    return { movies, page: searchParams.page };
   }
 }
 

@@ -1,11 +1,12 @@
-import { Alert, Grid, Stack, Typography } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import { useMoviesLibrary } from "../api/useMoviesLibrary";
-import { MovieCard } from "../components/MovieCard";
-import { useState } from "react";
-import { Movie } from "../api/useMoviesQuery";
+// import { Alert, Grid, Stack, Typography } from "@mui/material";
+// import SearchIcon from "@mui/icons-material/Search";
+// import { useMoviesLibrary } from "../api/useMoviesLibrary";
+// import { MovieCard } from "../components/MovieCard";
+// import { useState } from "react";
+// import { Movie } from "../api/useMoviesQuery";
 
 export function MyLibraryPage() {
+  return "";
   const { movies, setMovies } = useMoviesLibrary();
   const [lastDeleted, setLastDeleted] = useState<Movie | undefined>(undefined);
 

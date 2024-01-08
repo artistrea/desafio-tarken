@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { Session } from "../../api/login";
+import { Session } from "../../clientApi/auth/useLoginMutation";
 
 export type SessionContext = null | {
   session?: Session;
@@ -7,6 +7,7 @@ export type SessionContext = null | {
     email: string;
     password: string;
   }) => Promise<Session | undefined>;
+  logout: () => void;
 };
 
 export const sessionContext = createContext<SessionContext>(null);
