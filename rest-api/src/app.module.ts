@@ -10,6 +10,7 @@ import { MoviesModule } from './movies/movies.module';
 import { LibraryMoviesModule } from './library_movies/library_movies.module';
 import { Movie } from './movies/movies.entity';
 import { LibraryMovie } from './library_movies/entities/library_movie.entity';
+import { CustomValidationsModule } from './custom_validations/custom_validations.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { LibraryMovie } from './library_movies/entities/library_movie.entity';
     UsersModule,
     MoviesModule,
     LibraryMoviesModule,
+    CustomValidationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
