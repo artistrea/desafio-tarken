@@ -55,7 +55,8 @@ export function LoginPage() {
           sign(loginDetails)
             .then(() => {
               // set timeout gambiarra pois tanstack router estava rodando o navigate antes do
-              // contexto de sessão mudar. Adicionando o navigate à fila de tasks resolve o problema
+              // contexto de sessão mudar, o que impede o acesso às rotas protegidas ("/library" incluso).
+              // Adicionando o navigate à fila de tasks resolve o problema
               setTimeout(() => {
                 router.navigate({
                   to: "/library",

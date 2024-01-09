@@ -8,7 +8,7 @@ import { LayoutWithNavbar } from "./layouts/WithNavbar";
 import { LoginPage } from "./pages/Login";
 import { MyLibraryPage } from "./pages/MyLibrary";
 import { SearchPage } from "./pages/Search";
-import type { Session } from "./contexts/sessionContext/use";
+import { Session } from "./clientApi/auth/Session";
 
 const rootRoute = rootRouteWithContext<{
   session?: Session;

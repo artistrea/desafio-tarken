@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { api } from "../instance";
-import { Session } from "./Session";
+import type { Session } from "./Session";
 
 type LoginInfo = {
   email: string;
