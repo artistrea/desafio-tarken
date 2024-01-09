@@ -65,12 +65,29 @@ export function LoginPage() {
               }, 100);
             })
             .catch((err) => {
-              if (typeof err.response?.data?.message === "string") {
-                alert(err.response?.data?.message);
-                setErrors([]);
-              } else if (err instanceof AxiosError)
-                setErrors((err.response?.data?.message as string[]) || []);
-              else alert("Ocorreu um erro inesperado");
+              if (err instanceof AxiosError) {
+                switch (err.response?.status) {
+                  case undefined:
+                    alert(
+                      "Parece que você não está conseguindo se comunicar com o servidor. Verifique sua conexão de rede."
+                    );
+                    setErrors([]);
+                    break;
+                  case 400: // erros de validação do input
+                    setErrors((err.response?.data?.message as string[]) || []);
+                    break;
+                  case 401:
+                    alert("Email ou senha incorretos");
+                    setErrors([]);
+                    break;
+                  case 422:
+                    alert("Este email já está sendo utilizado");
+                    setErrors([]);
+                    break;
+                  default:
+                    break;
+                }
+              } else alert("Ocorreu um erro inesperado");
 
               setLoading(false);
             });
@@ -102,7 +119,14 @@ export function LoginPage() {
             {errors.find((e) => e.includes("email"))}
           </FormHelperText>
         </FormControl>
-        <FormControl error={!!errors.find((e) => e.includes("password"))}>
+        <FormControl
+          error={
+            !!errors.find(
+              (e) =>
+                e.includes("password") && !e.includes("password_confirmation")
+            )
+          }
+        >
           <TextField
             label="Password"
             id="password"
@@ -115,11 +139,16 @@ export function LoginPage() {
             error={!!errors.find((e) => e.includes("password"))}
           />
           <FormHelperText>
-            {errors.find((e) => e.includes("password"))}
+            {errors.find(
+              (e) =>
+                e.includes("password") && !e.includes("password_confirmation")
+            )}
           </FormHelperText>
         </FormControl>
         {isRegistering && (
-          <FormControl>
+          <FormControl
+            error={!!errors.find((e) => e.includes("password_confirmation"))}
+          >
             <TextField
               label="Password Confirmation"
               id="password_confirmation"
@@ -134,6 +163,9 @@ export function LoginPage() {
               }
               error={!!errors.find((e) => e.includes("password_confirmation"))}
             />
+            <FormHelperText sx={{ textWrap: "wrap", maxWidth: "30ch" }}>
+              {errors.find((e) => e.includes("password_confirmation"))}
+            </FormHelperText>
           </FormControl>
         )}
         <br />
