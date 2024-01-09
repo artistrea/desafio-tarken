@@ -4,13 +4,11 @@ import {
   Post,
   HttpCode,
   HttpStatus,
-  Res,
+  HttpException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/SignUp.dto';
 import { SignInDto } from './dto/SignIn.dto';
-import type { Response } from 'express';
-import { QueryFailedError } from 'typeorm';
 
 @Controller('auth')
 export class AuthController {
@@ -24,16 +22,20 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('register')
-  async signUp(@Body() signUpDto: SignUpDto, @Res() res: Response) {
-    try {
-      return await this.authService.signUp(
+  async signUp(@Body() signUpDto: SignUpDto) {
+    return await this.authService
+      .signUp(
         signUpDto.email,
         signUpDto.password,
         signUpDto.password_confirmation,
-      );
-    } catch (e) {
-      if (e instanceof QueryFailedError) return res.status(422).send();
-      else throw e;
-    }
+      )
+      .catch((err) => {
+        throw new HttpException(
+          {
+            message: err.message,
+          },
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+      });
   }
 }
