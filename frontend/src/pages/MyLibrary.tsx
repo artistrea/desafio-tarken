@@ -2,8 +2,7 @@ import { Alert, Grid, Stack, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { MovieCard } from "../components/MovieCard";
 import { useState } from "react";
-import { useLibraryQuery } from "../clientApi/libraryMovies/useLibraryQuery";
-import { useRemoveFromLibraryMutation } from "../clientApi/libraryMovies/useRemoveFromLibraryMutation";
+import { useLibraryQuery, useRemoveFromLibraryMutation } from "client-api";
 
 export function MyLibraryPage() {
   const { data: movies, isLoading } = useLibraryQuery();

@@ -1,10 +1,12 @@
 import { type PropsWithChildren, useState, useEffect } from "react";
 import { sessionContext } from "./use";
-import { useLoginMutation } from "../../clientApi/auth/useLoginMutation";
-import { api } from "../../clientApi/instance";
+import {
+  api,
+  useLoginMutation,
+  useRegisterMutation,
+  type Session,
+} from "client-api";
 import Cookie from "js-cookie";
-import { useRegisterMutation } from "../../clientApi/auth/useRegisterMutation";
-import type { Session } from "../../clientApi/auth/Session";
 
 export function SessionContextProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | undefined>(undefined);

@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { Session } from "../../clientApi/auth/Session";
+import type { Session } from "client-api";
 
 export type SessionContext = null | {
   session?: Session;

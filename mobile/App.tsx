@@ -5,7 +5,16 @@ import { StyleSheet, Text, View } from "react-native";
 import { LoginPage } from "./src/pages/Login";
 import { SessionContextProvider } from "./src/contexts/sessionContext/Provider";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "./src/clientApi/instance";
+import { queryClient, api } from "client-api";
+
+import Constants from "expo-constants";
+const { expoConfig } = Constants;
+
+const baseURL = expoConfig?.hostUri?.split(":")[0]
+  ? `http://${expoConfig.hostUri.split(":")[0]}:3000`
+  : `TODO: url de produção`;
+
+api.defaults.baseURL = baseURL;
 
 const Stack = createNativeStackNavigator();
 

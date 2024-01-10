@@ -4,7 +4,9 @@ import { SessionContextProvider } from "./contexts/sessionContext/Provider";
 import { useSessionContext } from "./contexts/sessionContext/use";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "./clientApi/instance";
+import { queryClient, api } from "client-api";
+
+api.defaults.baseURL = "http://localhost:3000";
 
 const theme = createTheme({
   palette: {

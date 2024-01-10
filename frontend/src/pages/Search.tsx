@@ -2,10 +2,12 @@ import { Button, Grid, Input, Stack, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { MovieCard } from "../components/MovieCard";
-import { useSearchQuery } from "../clientApi/movies/useSearchQuery";
-import { useRemoveFromLibraryMutation } from "../clientApi/libraryMovies/useRemoveFromLibraryMutation";
-import { useAddToLibraryMutation } from "../clientApi/libraryMovies/useAddToLibraryMutation";
-import { useLibraryQuery } from "../clientApi/libraryMovies/useLibraryQuery";
+import {
+  useSearchQuery,
+  useRemoveFromLibraryMutation,
+  useAddToLibraryMutation,
+  useLibraryQuery,
+} from "client-api";
 
 export function SearchPage() {
   const [query, setQuery] = useState("");
