@@ -36,10 +36,15 @@ export function MyLibraryPage() {
         }}
       >
         {movies?.length ? (
-          <Grid container spacing={2}>
+          <Grid
+            container
+            spacing={2}
+            justifyContent={{ xs: "center", xl: "initial" }}
+          >
             {movies.map((m) => (
               <Grid item key={m.id}>
                 <MovieCard
+                  onAddToLibrary={() => {}}
                   onRemoveFromLibrary={() => {
                     setLastDeleted(m.title);
                     removeFromLib(m.id);

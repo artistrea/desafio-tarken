@@ -117,6 +117,17 @@ export function SearchPage() {
               ))
             )}
             <div style={{ display: "hidden" }} ref={ref}></div>
+
+            {isFetching &&
+              Array.from({ length: 9 }).map((_, i) => (
+                <Grid item key={i}>
+                  <MovieCard
+                    onAddToLibrary={() => {}}
+                    onRemoveFromLibrary={() => {}}
+                    movie={"skeleton"}
+                  />
+                </Grid>
+              ))}
           </Grid>
         ) : (
           <div

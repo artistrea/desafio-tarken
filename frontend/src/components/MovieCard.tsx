@@ -12,9 +12,9 @@ import { Bookmark, Star } from "@mui/icons-material";
 import { Movie } from "../clientApi/movies/Movie";
 
 type MovieCardProps = {
-  movie: Movie;
+  movie: Movie | "skeleton";
   onRemoveFromLibrary: (m: Movie) => void;
-  onAddToLibrary?: (m: Movie) => void;
+  onAddToLibrary: (m: Movie) => void;
 };
 
 export function MovieCard({
@@ -23,8 +23,15 @@ export function MovieCard({
   onAddToLibrary,
 }: MovieCardProps) {
   return (
-    <Card sx={{ width: 300 }}>
-      {movie.poster !== "N/A" ? (
+    <Card
+      sx={{
+        width: 300,
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {movie !== "skeleton" && movie.poster !== "N/A" ? (
         <CardMedia
           component={"img"}
           height="444"
@@ -35,13 +42,13 @@ export function MovieCard({
         <CardMedia
           component={Skeleton}
           variant="rectangular"
-          height={444}
+          height={427}
           sx={{
             margin: 1,
             maxWidth: "100%",
             borderRadius: 1,
           }}
-          animation={false}
+          {...(movie === "skeleton" ? {} : { animation: false })}
         />
       )}
       <CardContent sx={{ paddingY: 1, paddingX: 3 }}>
@@ -53,9 +60,16 @@ export function MovieCard({
             fontSize="large"
             mr="auto"
           >
-            {movie.title}
+            {movie === "skeleton" ? (
+              <Skeleton
+                variant="rectangular"
+                sx={{ minHeight: "100%", minWidth: 150 }}
+              />
+            ) : (
+              movie.title
+            )}
           </Typography>
-          <Star color="warning" />
+          <Star color={movie === "skeleton" ? "disabled" : "warning"} />
           <Typography
             lineHeight={1}
             variant="body2"
@@ -63,25 +77,38 @@ export function MovieCard({
             fontSize="large"
             ml={1}
           >
-            {movie.rating}
+            {movie === "skeleton" ? (
+              <Skeleton
+                variant="rectangular"
+                sx={{ minHeight: "100%", minWidth: 30 }}
+              />
+            ) : (
+              movie.rating
+            )}
           </Typography>
         </Stack>
       </CardContent>
-      <CardActions sx={{ paddingX: 3, paddingBottom: 2, paddingTop: 0 }}>
-        <Button
-          onClick={() => {
-            if (movie.hasAlreadyBeenAdded) onRemoveFromLibrary(movie);
-            else onAddToLibrary && onAddToLibrary(movie);
-          }}
-          fullWidth
-          color={movie.hasAlreadyBeenAdded ? "error" : "success"}
-          variant="contained"
-          startIcon={<Bookmark fontSize="inherit" />}
-        >
-          <Typography textTransform={"none"}>
-            {movie.hasAlreadyBeenAdded ? "Remove" : "Add to My Library"}
-          </Typography>
-        </Button>
+      <CardActions
+        sx={{ paddingX: 3, paddingBottom: 2, paddingTop: 0, marginTop: "auto" }}
+      >
+        {movie === "skeleton" ? (
+          <Skeleton variant="text" sx={{ minHeight: 50, minWidth: "100%" }} />
+        ) : (
+          <Button
+            onClick={() => {
+              if (movie.hasAlreadyBeenAdded) onRemoveFromLibrary(movie);
+              else onAddToLibrary(movie);
+            }}
+            fullWidth
+            color={movie.hasAlreadyBeenAdded ? "error" : "success"}
+            variant="contained"
+            startIcon={<Bookmark fontSize="inherit" />}
+          >
+            <Typography textTransform={"none"}>
+              {movie.hasAlreadyBeenAdded ? "Remove" : "Add to My Library"}
+            </Typography>
+          </Button>
+        )}
       </CardActions>
     </Card>
   );

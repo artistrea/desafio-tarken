@@ -8,7 +8,7 @@ export function LayoutWithNavbar() {
   const router = useRouter();
 
   return (
-    <Stack direction="row" width={"100%"} minHeight={"100vh"}>
+    <Stack direction={{ md: "row" }} width={"100%"} minHeight={"100vh"}>
       <Typography
         color="primary"
         fontSize={32}
@@ -18,7 +18,12 @@ export function LayoutWithNavbar() {
       >
         Moovy
       </Typography>
-      <Stack direction="column" paddingX={15} width={"100%"} flex={1}>
+      <Stack
+        direction="column"
+        paddingX={{ md: 15, sm: 10, xs: 4 }}
+        width={"100%"}
+        flex={1}
+      >
         <Stack direction="row">
           <Link
             component={RouterLink}
