@@ -1,13 +1,12 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
 import { LoginPage } from "./src/pages/Login";
 import { SessionContextProvider } from "./src/contexts/sessionContext/Provider";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient, api } from "client-api";
 
 import Constants from "expo-constants";
+import { MyLibraryPage } from "./src/pages/MyLibrary";
 const { expoConfig } = Constants;
 
 const baseURL = expoConfig?.hostUri?.split(":")[0]
@@ -29,7 +28,7 @@ export default function App() {
                 headerShown: false,
               }}
               name="MyLibrary"
-              component={Page}
+              component={MyLibraryPage}
             />
             <Stack.Screen
               options={{
@@ -44,21 +43,3 @@ export default function App() {
     </QueryClientProvider>
   );
 }
-
-function Page() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

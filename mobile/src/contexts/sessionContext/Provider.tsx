@@ -1,9 +1,11 @@
 import { type PropsWithChildren, useState, useEffect } from "react";
 import { sessionContext } from "./use";
-import { useLoginMutation } from "../../clientApi/auth/useLoginMutation";
-import { api } from "../../clientApi/instance";
-import { useRegisterMutation } from "../../clientApi/auth/useRegisterMutation";
-import type { Session } from "../../clientApi/auth/Session";
+import {
+  useLoginMutation,
+  api,
+  useRegisterMutation,
+  type Session,
+} from "client-api";
 
 // only works on android and ios:
 import * as SecureStore from "expo-secure-store";
