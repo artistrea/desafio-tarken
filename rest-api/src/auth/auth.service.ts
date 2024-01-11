@@ -15,7 +15,10 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signIn(email: string, pass: string): Promise<{ access_token: string }> {
+  async signIn(
+    email: string,
+    pass: string,
+  ): Promise<{ access_token: string; email: string }> {
     const user = await this.usersService.findOne(email);
 
     if (!user || !(await bcrypt.compare(pass, user.hashed_password))) {
@@ -25,6 +28,7 @@ export class AuthService {
     const payload: JWTPayload = { id: user.id, email: user.email };
     return {
       access_token: await this.jwtService.signAsync(payload),
+      email: user.email,
     };
   }
 

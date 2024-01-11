@@ -13,8 +13,9 @@ export function SessionContextProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     const access_token = Cookie.get("access_token");
-    if (access_token) {
-      setSession({ access_token });
+    const email = Cookie.get("email");
+    if (access_token && email) {
+      setSession({ email, access_token });
     }
   }, []);
 
@@ -25,10 +26,15 @@ export function SessionContextProvider({ children }: PropsWithChildren) {
         sameSite: "strict",
         expires: 365,
       });
+      Cookie.set("email", session.email, {
+        sameSite: "strict",
+        expires: 365,
+      });
     } else {
       api.defaults.headers["Authorization"] &&
         delete api.defaults.headers["Authorization"];
       Cookie.remove("access_token");
+      Cookie.remove("email");
     }
   }, [session]);
   const { mutateAsync: loginAsync } = useLoginMutation();

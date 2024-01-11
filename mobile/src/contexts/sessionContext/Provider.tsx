@@ -16,8 +16,9 @@ export function SessionContextProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     async function checkIfSignedIn() {
       const access_token = await SecureStore.getItemAsync("access_token");
-      if (access_token) {
-        setSession({ access_token });
+      const email = await SecureStore.getItemAsync("email");
+      if (access_token && email) {
+        setSession({ access_token, email });
       }
     }
 
@@ -28,10 +29,12 @@ export function SessionContextProvider({ children }: PropsWithChildren) {
     if (session) {
       api.defaults.headers["Authorization"] = `Bearer ${session.access_token}`;
       SecureStore.setItemAsync("access_token", session.access_token);
+      SecureStore.setItemAsync("email", session.email);
     } else {
       api.defaults.headers["Authorization"] &&
         delete api.defaults.headers["Authorization"];
       SecureStore.deleteItemAsync("access_token").catch(() => {});
+      SecureStore.deleteItemAsync("email").catch(() => {});
     }
   }, [session]);
   const { mutateAsync: loginAsync } = useLoginMutation();
