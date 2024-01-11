@@ -7,6 +7,7 @@ import { queryClient, api } from "client-api";
 
 import Constants from "expo-constants";
 import { MyLibraryPage } from "./src/pages/MyLibrary";
+import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 const { expoConfig } = Constants;
 
 const baseURL = expoConfig?.hostUri?.split(":")[0]
@@ -17,7 +18,9 @@ api.defaults.baseURL = baseURL;
 
 const Stack = createNativeStackNavigator();
 
-export default function App() {
+export default gestureHandlerRootHOC(App);
+
+function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionContextProvider>

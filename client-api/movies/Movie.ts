@@ -3,4 +3,5 @@ export type Movie = {
   title: string;
   poster: string;
   rating: string;
+  hasAlreadyBeenAdded?: boolean;
 };

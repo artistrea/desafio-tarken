@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Bookmark, Star } from "@mui/icons-material";
-import { Movie } from "../clientApi/movies/Movie";
+import type { Movie } from "client-api";
 
 type MovieCardProps = {
   movie: Movie | "skeleton";
