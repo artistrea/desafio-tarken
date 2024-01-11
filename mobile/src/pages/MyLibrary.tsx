@@ -6,22 +6,40 @@ import { type NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useLibraryQuery } from "client-api";
 import Carousel from "react-native-reanimated-carousel";
 import { ScrollView } from "react-native-gesture-handler";
+import { AudioRecorder } from "../components/AudioRecorder";
+import { useAudioContext } from "../contexts/audioContext/use";
 
 export function MyLibraryPage({
   navigation,
 }: NativeStackScreenProps<any, "MyLibrary">) {
   const { logout, session } = useSessionContext();
+  const [scrolling, setScrolling] = useState(false);
 
   const { data: library } = useLibraryQuery();
 
   useEffect(() => {
     if (!session) navigation.replace("Login");
   }, [session, navigation]);
+
   const { width } = useWindowDimensions();
   const [currentIndex, setCurrentIndex] = useState(0);
   const currentMovie = library?.[currentIndex];
 
-  const [isRecording, setIsRecording] = useState(false);
+  const {
+    playRecording,
+    loadLocalRecordingsUris,
+    localRecordingsUris,
+    deleteRecording,
+  } = useAudioContext();
+
+  useEffect(() => {
+    if (session) loadLocalRecordingsUris(session);
+  }, []);
+
+  const hasRecordingForCurrentMovie =
+    currentMovie &&
+    (currentMovie.audio ||
+      (localRecordingsUris && localRecordingsUris[currentMovie?.id]));
 
   return (
     <>
@@ -48,6 +66,8 @@ export function MyLibraryPage({
         <View style={{ flex: 1 }}>
           <Carousel
             loop
+            onScrollBegin={() => setScrolling(true)}
+            onScrollEnd={() => setScrolling(false)}
             width={width}
             mode="parallax"
             snapEnabled
@@ -91,7 +111,7 @@ export function MyLibraryPage({
               variant="titleLarge"
               style={{ fontWeight: "bold", paddingHorizontal: 8 }}
             >
-              {currentMovie?.title}
+              {scrolling ? "..." : currentMovie?.title}
             </Text>
             <View
               style={{
@@ -100,63 +120,75 @@ export function MyLibraryPage({
               }}
             >
               <Icon source="star" size={24} color="#FCC419" />
-              <Text>{currentMovie?.rating}</Text>
+              <Text>{scrolling ? "..." : currentMovie?.rating}</Text>
             </View>
-            <View
-              style={{
-                position: "relative",
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <Button
-                onPressIn={() => {
-                  setIsRecording(true);
-                }}
-                onPressOut={() => {
-                  setIsRecording(false);
-                }}
-                icon="microphone-outline"
+            {hasRecordingForCurrentMovie ? (
+              <View
                 style={{
                   display: "flex",
-                  backgroundColor: "#6CD3AE",
-                  marginVertical: 18,
-                  zIndex: 999,
-                  minWidth: 0,
-                }}
-                labelStyle={{
-                  marginHorizontal: 0,
-                  paddingVertical: 5,
-                  paddingHorizontal: 10,
-                  marginVertical: 0,
-                  fontSize: 32,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  position: "relative",
+                  width: "100%",
                 }}
               >
-                {""}
-              </Button>
-              {isRecording && (
-                <View
+                <Button
+                  onPress={() =>
+                    session &&
+                    currentMovie &&
+                    deleteRecording(session, currentMovie)
+                  }
+                  icon="trash-can-outline"
                   style={{
-                    position: "absolute",
                     display: "flex",
-                    alignItems: "center",
-                    padding: 20,
-                    gap: 20,
-                    zIndex: 99,
-                    backgroundColor: "rgba(18, 21, 61, 0.9)",
-                    top: -100,
-                    bottom: 0,
-                    left: 20,
-                    right: 20,
-                    borderRadius: 26,
+                    marginVertical: 18,
+                    backgroundColor: "rgba(254, 109, 142, 1)",
+                    marginStart: 10,
+                    zIndex: 999,
+                    position: "absolute",
+                    left: 10,
+                    minWidth: 0,
+                    borderRadius: 9999,
+                  }}
+                  labelStyle={{
+                    marginHorizontal: 0,
+                    paddingVertical: 7,
+                    paddingHorizontal: 10,
+                    marginVertical: 0,
+                    fontSize: 26,
+                    color: "black",
                   }}
                 >
-                  <Text style={{ color: "white" }}>Keep Holding to Record</Text>
-                  <Icon source="record" size={32} color="red" />
-                </View>
-              )}
-            </View>
+                  {""}
+                </Button>
+                <Button
+                  onPress={() =>
+                    session &&
+                    currentMovie &&
+                    playRecording(session, currentMovie)
+                  }
+                  icon="play"
+                  style={{
+                    display: "flex",
+                    marginVertical: 18,
+                    zIndex: 999,
+                    minWidth: 0,
+                  }}
+                  labelStyle={{
+                    marginHorizontal: 0,
+                    paddingVertical: 5,
+                    paddingHorizontal: 10,
+                    marginVertical: 0,
+                    color: "black",
+                    fontSize: 32,
+                  }}
+                >
+                  {""}
+                </Button>
+              </View>
+            ) : (
+              <AudioRecorder movie={currentMovie} disabled={scrolling} />
+            )}
           </View>
         </View>
       </ScrollView>

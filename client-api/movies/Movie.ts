@@ -4,4 +4,7 @@ export type Movie = {
   poster: string;
   rating: string;
   hasAlreadyBeenAdded?: boolean;
+  audio?: {
+    url: string;
+  };
 };

@@ -8,6 +8,7 @@ import { queryClient, api } from "client-api";
 import Constants from "expo-constants";
 import { MyLibraryPage } from "./src/pages/MyLibrary";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
+import { AudioContextProvider } from "./src/contexts/audioContext/Provider";
 const { expoConfig } = Constants;
 
 const baseURL = expoConfig?.hostUri?.split(":")[0]
@@ -24,24 +25,26 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionContextProvider>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Login">
-            <Stack.Screen
-              options={{
-                headerShown: false,
-              }}
-              name="MyLibrary"
-              component={MyLibraryPage}
-            />
-            <Stack.Screen
-              options={{
-                headerShown: false,
-              }}
-              name="Login"
-              component={LoginPage}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <AudioContextProvider>
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="Login">
+              <Stack.Screen
+                options={{
+                  headerShown: false,
+                }}
+                name="MyLibrary"
+                component={MyLibraryPage}
+              />
+              <Stack.Screen
+                options={{
+                  headerShown: false,
+                }}
+                name="Login"
+                component={LoginPage}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </AudioContextProvider>
       </SessionContextProvider>
     </QueryClientProvider>
   );
