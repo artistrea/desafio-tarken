@@ -4,6 +4,7 @@ import { Audio } from "expo-av";
 import {
   AndroidAudioEncoder,
   AndroidOutputFormat,
+  AudioSample,
   IOSAudioQuality,
   IOSOutputFormat,
 } from "expo-av/build/Audio";
@@ -31,6 +32,8 @@ export function AudioContextProvider({ children }: PropsWithChildren) {
   >({});
 
   async function loadLocalRecordingsUris(session: Session) {
+    await ensureDirExists(session.email);
+
     FileSystem.readDirectoryAsync(audiosDir(session.email)).then((files) => {
       const ids = files.map((f) => f.replace(".mp3", ""));
       setLocalRecordingUris(
@@ -42,11 +45,18 @@ export function AudioContextProvider({ children }: PropsWithChildren) {
     });
   }
 
+  function stopAudio() {
+    if (sound) {
+      setSound(undefined);
+      return sound?.unloadAsync();
+    }
+  }
+
   useEffect(() => {
     return sound
       ? () => {
           console.log("Unloading Sound");
-          sound.unloadAsync();
+          stopAudio();
         }
       : undefined;
   }, [sound]);
@@ -64,6 +74,7 @@ export function AudioContextProvider({ children }: PropsWithChildren) {
         const { granted } = await requestPermission();
         if (!granted) return;
       }
+      await stopAudio();
 
       // ios needs this:
       await Audio.setAudioModeAsync({
@@ -136,6 +147,11 @@ export function AudioContextProvider({ children }: PropsWithChildren) {
           from: tempUri,
           to: audioFileUri(session.email, movie.id),
         });
+
+        setLocalRecordingUris((prv) => ({
+          ...prv,
+          [movie.id]: audioFileUri(session.email, movie.id),
+        }));
       }
     } catch (error) {
       console.error("Failed to stop recording1", error);
@@ -147,12 +163,18 @@ export function AudioContextProvider({ children }: PropsWithChildren) {
 
   async function deleteRecording(session: Session, movie: Movie) {
     if (!session?.email) throw new Error("Tem que estar logado!");
+    await stopAudio();
 
     if (!(await hasRecording(session, movie))) return false;
 
     await FileSystem.deleteAsync(audioFileUri(session.email, movie.id)).catch(
       console.error
     );
+
+    setLocalRecordingUris((prv) => {
+      delete prv[movie.id];
+      return { ...prv };
+    });
 
     return true;
   }
@@ -164,29 +186,36 @@ export function AudioContextProvider({ children }: PropsWithChildren) {
     return dirInfo.exists;
   };
 
-  const playRecording = async (session: Session, movie: Movie) => {
-    if (!(await hasRecording(session, movie))) return false;
+  async function playAudio(session: Session, movie: Movie) {
+    if (!(await hasRecording(session, movie))) return null;
+    await stopAudio();
 
+    console.log("starting to play audio");
     const playbackObject = new Audio.Sound();
     await playbackObject.loadAsync({
       uri: audioFileUri(session.email, movie.id),
     });
 
+    playbackObject.setOnAudioSampleReceived(({}) => {});
+
     setSound(playbackObject);
 
     playbackObject.playAsync();
 
-    return true;
-  };
+    return (setter: null | ((callback: AudioSample) => void)) =>
+      playbackObject.setOnAudioSampleReceived(setter);
+  }
 
   return (
     <audioContext.Provider
       value={{
+        audio: sound,
         recording,
         recordingStatus,
         startRecording,
         stopRecording,
-        playRecording,
+        playAudio,
+        stopAudio,
         loadLocalRecordingsUris,
         localRecordingsUris,
         deleteRecording,

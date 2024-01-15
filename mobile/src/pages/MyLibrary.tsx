@@ -26,10 +26,12 @@ export function MyLibraryPage({
   const currentMovie = library?.[currentIndex];
 
   const {
-    playRecording,
+    playAudio,
     loadLocalRecordingsUris,
     localRecordingsUris,
     deleteRecording,
+    stopAudio,
+    audio,
   } = useAudioContext();
 
   useEffect(() => {
@@ -66,7 +68,10 @@ export function MyLibraryPage({
         <View style={{ flex: 1 }}>
           <Carousel
             loop
-            onScrollBegin={() => setScrolling(true)}
+            onScrollBegin={() => {
+              stopAudio();
+              setScrolling(true);
+            }}
             onScrollEnd={() => setScrolling(false)}
             width={width}
             mode="parallax"
@@ -162,16 +167,21 @@ export function MyLibraryPage({
                   {""}
                 </Button>
                 <Button
-                  onPress={() =>
-                    session &&
-                    currentMovie &&
-                    playRecording(session, currentMovie)
-                  }
-                  icon="play"
+                  onPress={() => {
+                    if (audio) {
+                      stopAudio();
+                      return;
+                    }
+                    if (session && currentMovie) {
+                      playAudio(session, currentMovie);
+                    }
+                  }}
+                  icon={audio ? "stop" : "play"}
                   style={{
                     display: "flex",
                     marginVertical: 18,
                     zIndex: 999,
+                    backgroundColor: "rgba(100,100,100,0.1)",
                     minWidth: 0,
                   }}
                   labelStyle={{
