@@ -8,6 +8,7 @@ import Carousel from "react-native-reanimated-carousel";
 import { ScrollView } from "react-native-gesture-handler";
 import { AudioRecorder } from "../components/AudioRecorder";
 import { useAudioContext } from "../contexts/audioContext/use";
+import { useAudioSyncToApi } from "../components/useAudioSyncToApi";
 
 export function MyLibraryPage({
   navigation,
@@ -37,6 +38,8 @@ export function MyLibraryPage({
   useEffect(() => {
     if (session) loadLocalRecordingsUris(session);
   }, []);
+
+  const { syncedIds } = useAudioSyncToApi(library, localRecordingsUris);
 
   const hasRecordingForCurrentMovie =
     currentMovie &&

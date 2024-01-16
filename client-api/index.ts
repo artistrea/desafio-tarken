@@ -4,6 +4,8 @@ export * from "./auth/useLoginMutation";
 export * from "./auth/useRegisterMutation";
 export * from "./libraryMovies/useAddToLibraryMutation";
 export * from "./libraryMovies/useRemoveFromLibraryMutation";
+export * from "./libraryMovies/useAddAudioToMovieMutation";
+export * from "./libraryMovies/useRemoveAudioFromMovieMutation";
 export * from "./libraryMovies/useLibraryQuery";
 export * from "./movies/Movie";
 export * from "./movies/useSearchQuery";

@@ -1,6 +1,6 @@
 import { Movie } from 'src/movies/movies.entity';
 import { User } from 'src/users/users.entity';
-import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class LibraryMovie {
@@ -17,4 +17,7 @@ export class LibraryMovie {
   @ManyToOne(() => Movie, (movie) => movie.libraryMovies)
   @JoinColumn({ name: 'movieId' })
   movie: Movie;
+
+  @Column({ nullable: true })
+  audio_url: string;
 }

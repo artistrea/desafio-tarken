@@ -5,6 +5,9 @@ import { SessionContextProvider } from "./src/contexts/sessionContext/Provider";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient, api } from "client-api";
 
+import NetInfo from "@react-native-community/netinfo";
+import { onlineManager } from "@tanstack/react-query";
+
 import Constants from "expo-constants";
 import { MyLibraryPage } from "./src/pages/MyLibrary";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
@@ -49,3 +52,10 @@ function App() {
     </QueryClientProvider>
   );
 }
+
+// https://tanstack.com/query/v3/docs/react/react-native#online-status-management
+onlineManager.setEventListener((setOnline) => {
+  return NetInfo.addEventListener((state) => {
+    setOnline(state.isConnected || false);
+  });
+});
